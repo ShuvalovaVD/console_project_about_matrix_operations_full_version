@@ -134,6 +134,11 @@ def check_symmetry_of_matrix(rows, columns, matrix):
     return True  # иначе если не встретилось асимметрий, возвращаем True
 
 
+def check_matrices_addition_or_subtraction(rows_1, columns_1, rows_2, columns_2):
+    """Возвращает True, если сложение/вычитание матриц определено, и False - в противном случае."""
+    return (rows_1 == rows_2 and columns_1 == columns_2)
+
+
 def add_two_matrices(rows, columns, matrix_1, matrix_2):
     """
     Складывает две матрицы. Предполагается, что размеры у матриц одинаковые: только тогда сложение матриц определено.
@@ -152,6 +157,11 @@ def subtract_two_matrices(rows, columns, matrix_1, matrix_2):
     matrix_2_new = multiply_matrix_by_number(rows, columns, matrix_2, -1)
     matrix_result = add_two_matrices(rows, columns, matrix_1, matrix_2_new)
     return matrix_result
+
+
+def check_matrices_multiplication(rows_1, columns_1, rows_2, columns_2):
+    """Возвращает True, если умножение первой матрицы на вторую матрицу определено, и False - в противном случае."""
+    return (columns_1 == rows_2)
 
 
 def multiply_two_matrices(rows_1, columns_1, matrix_1, rows_2, columns_2, matrix_2):
@@ -209,24 +219,30 @@ def main():
                 print("Матрица несимметричная")
         elif answer == "4":
             rows_1, columns_1, matrix_1, rows_2, columns_2, matrix_2 = get_two_matrices()
-            # предполагается, что размеры у матриц одинаковые: только тогда сложение матриц определено
-            rows_result, columns_result = rows_1, columns_1
-            matrix_result = add_two_matrices(rows_result, columns_result, matrix_1, matrix_2)
-            show_matrix_result(rows_result, columns_result, matrix_result)
+            if check_matrices_addition_or_subtraction(rows_1, columns_1, rows_2, columns_2):
+                rows_result, columns_result = rows_1, columns_1
+                matrix_result = add_two_matrices(rows_result, columns_result, matrix_1, matrix_2)
+                show_matrix_result(rows_result, columns_result, matrix_result)
+            else:
+                print("Сложение данных матриц не определено: у них должны быть одинаковые размеры.")
         elif answer == "5":
             rows_1, columns_1, matrix_1, rows_2, columns_2, matrix_2 = get_two_matrices()
-            # предполагается, что размеры у матриц одинаковые: только тогда вычитание матриц определено
-            rows_result, columns_result = rows_1, columns_1
-            matrix_result = subtract_two_matrices(rows_result, columns_result, matrix_1, matrix_2)
-            show_matrix_result(rows_result, columns_result, matrix_result)
+            if check_matrices_addition_or_subtraction(rows_1, columns_1, rows_2, columns_2):
+                rows_result, columns_result = rows_1, columns_1
+                matrix_result = subtract_two_matrices(rows_result, columns_result, matrix_1, matrix_2)
+                show_matrix_result(rows_result, columns_result, matrix_result)
+            else:
+                print("Вычитание данных матриц не определено: у них должны быть одинаковые размеры.")
         elif answer == "6":
             rows_1, columns_1, matrix_1, rows_2, columns_2, matrix_2 = get_two_matrices()
-            # предполагается, что количество столбцов первой матрицы равно числу строк второй матрицы:
-            # только тогда умножение первой матрицы на вторую матрицу определено
-            rows_result, columns_result = rows_1, columns_2
-            # при умножении первой матрицы на вторую матрицу итоговая матрица будет иметь размеры rows_1 x columns_2
-            matrix_result = multiply_two_matrices(rows_1, columns_1, matrix_1, rows_2, columns_2, matrix_2)
-            show_matrix_result(rows_result, columns_result, matrix_result)
+            if check_matrices_multiplication(rows_1, columns_1, rows_2, columns_2):
+                rows_result, columns_result = rows_1, columns_2
+                # при умножении первой матрицы на вторую матрицу итоговая матрица будет иметь размеры rows_1 x columns_2
+                matrix_result = multiply_two_matrices(rows_1, columns_1, matrix_1, rows_2, columns_2, matrix_2)
+                show_matrix_result(rows_result, columns_result, matrix_result)
+            else:
+                print("Умножение данных матриц не определено:",
+                      "количество столбцов первой матрицы должно быть равно количеству строк второй матрицы.", sep=" ")
         elif answer == "7":
             break  # выход из вечного цикла
         else:  # если пользователь ввёл что-то, отличное от 1-7
